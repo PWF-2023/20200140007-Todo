@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TodoController extends Controller
 {
@@ -20,10 +21,16 @@ class TodoController extends Controller
             'title' => 'required|max:255',
         ]);
 
-        $todo = Todo::create([
-            'title' => ucfirst($request->title),
-            'user_id' => auth()->user()->id,
-        ]);
+        // $todo = Todo::create([
+        //     'title' => ucfirst($request->title),
+        //     'user_id' => auth()->user()->id,
+        // ]);
+
+        //Eloquent Way - Shortest
+        $request->user()->todos()->create($request->all());
+        // $request->user()->todos()->create([
+        //     'title' => ucfirst($request->title),
+        // ]);
 
         return redirect()->route('todo.index')->with('success', 'Todo created successfully!');
     }
