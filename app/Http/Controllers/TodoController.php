@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
@@ -48,17 +49,22 @@ class TodoController extends Controller
 
     public function edit(Todo $todo)
     {
-        if (auth()->user()->id == $todo->user_id) {
-            //dd($todo);
+        // if (auth()->user()->id == $todo->user_id) {
+        //     //dd($todo);
+        //     return view('todo.edit', compact('todo'));
+        // } else {
+        //     // abort(403);
+        //     // abort(403, 'Not authorized');
+        //     return redirect()->route('todo.index')->with(
+        //         'danger',
+        //         'You are not authorized to edit this todo!'
+        //     );
+        // }
+
+        if(auth()->user()->id == $todo->user_id){
             return view('todo.edit', compact('todo'));
-        } else {
-            // abort(403);
-            // abort(403, 'Not authorized');
-            return redirect()->route('todo.index')->with(
-                'danger',
-                'You are not authorized to edit this todo!'
-            );
         }
+        return redirect()->route('todo.index')->with('danger', 'You are not authorized to edit this todo!');
     }
 
     public function update(Request $request, Todo $todo)
